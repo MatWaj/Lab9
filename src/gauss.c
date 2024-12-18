@@ -15,18 +15,24 @@ int eliminate(Matrix *mat, Matrix *b)
 
 	for (k = 0; k < n; k++)
 	{
-		// Czesciowe pivotowanie
-		// Znajduje największy element w kolumnie k poniżej lub na przekątnej
-		int maxRow = k;
-		for (i = k + 1; i < n; i++)
+
+		// Pełne pivotowanie
+
+		int maxRow = k, maxCol = k;
+		for (i = k; i < n; i++)
 		{
-			if (fabs(mat->data[i][k]) > fabs(mat->data[maxRow][k]))
+			for (j = k; j < n; j++)
 			{
-				maxRow = i;
+				if (fabs(mat->data[i][j]) > fabs(mat->data[maxRow][maxCol]))
+				{
+					maxRow = i;
+					maxCol = j;
+				}
 			}
 		}
 
-		// Zamiana wierszy w macierzy mat
+		// Zamiana wierszy
+
 		if (maxRow != k)
 		{
 			for (j = 0; j < mat->c; j++)
@@ -36,13 +42,24 @@ int eliminate(Matrix *mat, Matrix *b)
 				mat->data[maxRow][j] = temp;
 			}
 
-			// Zamiana wierszy w macierzy b
+
 			double temp = b->data[k][0];
 			b->data[k][0] = b->data[maxRow][0];
 			b->data[maxRow][0] = temp;
 		}
 
-		// Sprawdza, czy pivot nie jest zerem
+
+		if (maxCol != k)
+		{
+			for (i = 0; i < n; i++)
+			{
+				double temp = mat->data[i][k];
+				mat->data[i][k] = mat->data[i][maxCol];
+				mat->data[i][maxCol] = temp;
+			}
+		}
+
+
 		if (mat->data[k][k] == 0.0)
 		{
 			return 1;
