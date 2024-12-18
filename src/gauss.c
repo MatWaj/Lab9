@@ -1,6 +1,4 @@
 #include "gauss.h"
-#include <stdio.h>
-
 
 /**
  * Zwraca 0 - elimnacja zakonczona sukcesem
@@ -17,11 +15,51 @@ int eliminate(Matrix *mat, Matrix *b)
 
 	for (k = 0; k < n; k++)
 	{
+		// Pełne pivotowanie
+
+		int maxRow = k, maxCol = k;
+		for (i = k; i < n; i++)
+		{
+			for (j = k; j < n; j++)
+			{
+				if (fabs(mat->data[i][j]) > fabs(mat->data[maxRow][maxCol]))
+				{
+					maxRow = i;
+					maxCol = j;
+				}
+			}
+		}
+
+		// Zamiana wierszy
+		if (maxRow != k)
+		{
+			for (j = 0; j < mat->c; j++)
+			{
+				double temp = mat->data[k][j];
+				mat->data[k][j] = mat->data[maxRow][j];
+				mat->data[maxRow][j] = temp;
+			}
+			double temp = b->data[k][0];
+			b->data[k][0] = b->data[maxRow][0];
+			b->data[maxRow][0] = temp;
+		}
+
+		if (maxCol != k)
+		{
+			for (i = 0; i < n; i++)
+			{
+				double temp = mat->data[i][k];
+				mat->data[i][k] = mat->data[i][maxCol];
+				mat->data[i][maxCol] = temp;
+			}
+		}
+
 		if (mat->data[k][k] == 0.0)
 		{
 			return 1;
 		}
 
+		// Eliminacja Gaussa
 		double pivot = mat->data[k][k];
 		for (j = k; j < mat->c; j++)
 		{
