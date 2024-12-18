@@ -15,6 +15,7 @@ int eliminate(Matrix *mat, Matrix *b)
 
 	for (k = 0; k < n; k++)
 	{
+
 		// Pełne pivotowanie
 
 		int maxRow = k, maxCol = k;
@@ -31,6 +32,7 @@ int eliminate(Matrix *mat, Matrix *b)
 		}
 
 		// Zamiana wierszy
+
 		if (maxRow != k)
 		{
 			for (j = 0; j < mat->c; j++)
@@ -39,10 +41,13 @@ int eliminate(Matrix *mat, Matrix *b)
 				mat->data[k][j] = mat->data[maxRow][j];
 				mat->data[maxRow][j] = temp;
 			}
+
+
 			double temp = b->data[k][0];
 			b->data[k][0] = b->data[maxRow][0];
 			b->data[maxRow][0] = temp;
 		}
+
 
 		if (maxCol != k)
 		{
@@ -53,6 +58,7 @@ int eliminate(Matrix *mat, Matrix *b)
 				mat->data[i][maxCol] = temp;
 			}
 		}
+
 
 		if (mat->data[k][k] == 0.0)
 		{
